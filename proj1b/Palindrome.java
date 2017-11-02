@@ -19,4 +19,18 @@ public class Palindrome {
         return true;                //Only one char is left, that must be Palindrome
     }
 
+    public static boolean isPalindrome(String word,CharacterComparator cc){
+        Deque <Character> char_list = wordToDeque(word);
+        //cc = new OffByOne();
+        char a,b;
+        while(char_list.size() >= 2){
+            a = char_list.removeFirst();
+            b = char_list.removeLast();
+            if (a != b || cc.equalChars(a, b)) {  // Compare at begin and end
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
