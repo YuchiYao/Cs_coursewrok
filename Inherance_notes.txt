@@ -1,0 +1,8 @@
+If overridden, decide which method to call basesd on run-time type of variable. (override)
+
+Type assigmnent base on static type; But you can casting it. 
+(overload)
+
+
+Overloading : Same class, same function name, different parameters
+Overriding: Two classes(one is lower in the inheritance hierarchy than the other), same function name, same parameters
