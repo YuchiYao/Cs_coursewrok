@@ -89,30 +89,13 @@ public class Editor extends Application {
                 if (code == KeyCode.UP) {
                     fontSize += 5;
                     displayText.setFont(Font.font(fontName, fontSize));
-                    centerText();
+
                 } else if (code == KeyCode.DOWN) {
                     fontSize = Math.max(0, fontSize - 5);
                     displayText.setFont(Font.font(fontName, fontSize));
-                    centerText();
+
                 }
             }
-        }
-
-        private void centerText() {
-            // Figure out the size of the current text.
-            double textHeight = displayText.getLayoutBounds().getHeight();
-            double textWidth = displayText.getLayoutBounds().getWidth();
-
-            // Calculate the position so that the text will be centered on the screen.
-            double textTop = textCenterY + textHeight / 2;
-            double textLeft = textCenterX + textWidth / 2;
-
-            // Re-position the text.
-            displayText.setX(textLeft);
-            displayText.setY(textTop);
-
-            // Make sure the text appears in front of any other objects you might add.
-            displayText.toFront();
         }
     }
     @Override
