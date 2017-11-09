@@ -1,5 +1,12 @@
 // TODO: Make sure to make this class a part of the synthesizer package
 //package <package name>;
+package synthesizer;
+
+import org.omg.CORBA.INTERNAL;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Iterator;
 
 //Make sure this class is public
 public class GuitarString {
@@ -18,6 +25,7 @@ public class GuitarString {
         //       cast the result of this divsion operation into an int. For better
         //       accuracy, use the Math.round() function before casting.
         //       Your buffer should be initially filled with zeros.
+        buffer =new ArrayRingBuffer<Double>((int)Math.round(SR/frequency));
     }
 
 
@@ -28,6 +36,16 @@ public class GuitarString {
         //       double r = Math.random() - 0.5;
         //
         //       Make sure that your random numbers are different from each other.
+        Set<Double> random_input= new HashSet<>(buffer.capacity());
+        while (random_input.size() <buffer.capacity()){
+            random_input.add(Math.random() - 0.5);
+        }
+        Iterator<Double> it = random_input.iterator();
+        BoundedQueue<Double> bufferStack =new ArrayRingBuffer<>(buffer.capacity());
+        while(it.hasNext()){
+            bufferStack.enqueue(it.next());
+        }
+        buffer = bufferStack;
     }
 
     /* Advance the simulation one time step by performing one iteration of
@@ -37,11 +55,21 @@ public class GuitarString {
         // TODO: Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().
+        double a= buffer.dequeue();
+        buffer.enqueue((a+buffer.peek())*0.5*DECAY);
     }
 
     /* Return the double at the front of the buffer. */
     public double sample() {
         // TODO: Return the correct thing.
-        return 0;
+
+        return buffer.peek();
+    }
+
+    public static void main(String argus[]){
+        GuitarString a = new GuitarString(1000);
+        a.pluck();
+        a.tic();
+        System.out.println("1");
     }
 }

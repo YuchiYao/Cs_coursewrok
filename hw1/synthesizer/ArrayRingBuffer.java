@@ -3,7 +3,7 @@ import java.util.Iterator;
 
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
-public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
+public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>{
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
     /* Index for the next enqueue. */
@@ -32,14 +32,14 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * throw new RuntimeException("Ring buffer overflow"). Exceptions
      * covered Monday.
      */
-    public int addone(int index){
+    private int addone(int index){
         // Reach the up range and wrap back to 0
         if (index == capacity-1) return 0;
 
         else return index+1;
     }
 
-    public int minusone(int index){
+    private int minusone(int index){
         if (index == 1) return capacity-1;
 
         else return index-1;
@@ -73,6 +73,32 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         return output;
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return new Keyiterator();
+    }
+
+    private class Keyiterator implements Iterator<T>{
+        private int position;
+        private int IteratorTimes;
+        public Keyiterator(){
+            position = first ;
+            IteratorTimes = 0;
+        }
+        @Override
+        public boolean hasNext() {
+            return IteratorTimes < fillCount ;
+        }
+
+        @Override
+        public T next() {
+            T returnVal = rb[position];
+            position=addone(position);
+            IteratorTimes+=1;
+            return returnVal;
+        }
+    }
+
     /**
      * Return oldest item, but don't remove it.
      */
@@ -80,6 +106,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         // TODO: Return the first item. None of your instance variables should change.
         return rb[this.first];
     }
+
 
     public static void main(String[] args) {
 
@@ -89,7 +116,11 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         a.enqueue("chi");
         a.enqueue("ai");
         a.enqueue("Jiang");
-        System.out.println(a.dequeue());
+        Iterator<String>it= a.iterator();
+        while (it.hasNext()){
+            System.out.println(it.next());
+        }
+
 
     }
 
