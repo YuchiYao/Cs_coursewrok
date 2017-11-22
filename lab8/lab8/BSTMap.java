@@ -5,7 +5,7 @@ import java.util.*;
 public class BSTMap<K extends Comparable<K>,V> implements Map61B<K,V> {
     private class Entry {
 
-        /** Stores KEY as the key in this key-value pair, VAL as the value, and
+        /** Stores KEY as the key in th¸ key-value pair, VAL as the value, and
          *  RIGHT AND LEFT as the next node in the BSF. */
         Entry(K k, V v, Entry rightchild, Entry leftchild) {
             key = k;
@@ -51,6 +51,7 @@ public class BSTMap<K extends Comparable<K>,V> implements Map61B<K,V> {
      * The data for the BSTMap
      */
     private Entry root;
+    private Entry lastRemoveElement = null;
     //private LinkedList <K>keyInorder;
 
     /** Iniitalization of an empty entry */
@@ -145,18 +146,97 @@ public class BSTMap<K extends Comparable<K>,V> implements Map61B<K,V> {
         keys.add(entry.key);
         makeSet(entry.right,keys);
     }
+    /** Remove the key element */
+    public void delete(K key){
+        if (key == null) throw new IllegalArgumentException("calls put() with a null key");
+        root=delete(key,root);
+    }
+
+    private Entry delete(K key, Entry x){
+        if (x ==null) return null;
+        int cmd = key.compareTo(x.key);
+        if (cmd ==0) {
+            /*
+            if ( x.right== null && x.left != null) {
+                lastRemoveElement =x;
+                x= x.left;
+            }else if ( x.left == null && x.right != null){
+                lastRemoveElement =x;
+                x= x.right;
+            }else if (x.right== null && x.left == null){
+                lastRemoveElement = new Entry(x.key,x.val,x.right,x.left);
+                x= null;
+            }else {
+                Entry a = x;
+                lastRemoveElement =a;
+                x= min(a.right);
+                x.right = deleteMin(a.right);
+                x.left = a.left;
+            }
+            */
+            /**Better implementation from library*/
+            if (x.right == null){
+                lastRemoveElement =x;
+                return x.left;
+            }
+            if (x.left  == null) {
+                lastRemoveElement =x;
+                return x.right;
+            }
+            Entry t = x;
+            lastRemoveElement =t;
+            x = min(t.right);
+            x.right = deleteMin(t.right);
+            x.left = t.left;
+
+        }
+        else if (cmd <0) x.left=delete(key,x.left);
+        else x.right=delete(key,x.right);
+
+        x.size = size(x.right)+size(x.left) +1;
+        return x;
+    }
+    /** Remove the key element and return removed element value*/
     @Override
     public V remove(K key){
-        throw new UnsupportedOperationException();
+        delete(key);
+        return lastRemoveElement.val;
     }
-    @Override
-    public V remove(K key, V value){
-        throw new UnsupportedOperationException();
+
+    /**Find the minimum key of the BST*/
+    public Entry min ( Entry x){
+        if (x.left ==null ) return x;
+        return min(x.left);
+
     }
+    /** Delete the left most node below the x and keep the structure same*/
+    private Entry deleteMin(Entry x){
+        if(x.left == null) return x.right;
+        x.left = deleteMin(x.left);
+        x.size = size(x.left) + size(x.right) +1;
+        return x;
+    }
+    /** Require to use the iterator in list*/
     @Override
     public Iterator<K> iterator() {
+        LinkedList<K> keyList = new LinkedList();
+        helper(root,keyList);
+        return keyList.iterator();
+    }
+    private void helper(Entry entry,LinkedList<K> a){
+        if (entry == null){
+            return;
+        }
+        helper(entry.left,a);
+        a.addFirst(entry.key);
+        helper(entry.right,a);
+    }
+
+    @Override
+    public V remove(K key,V value){
         throw new UnsupportedOperationException();
     }
+
 
 
 }
