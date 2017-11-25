@@ -67,14 +67,14 @@ public class Percolation {
         return row*size + col;
     }
 
-    public static void main(String[] args){                 // unit testing (not required)
+/*    public static void main(String[] args){                 // unit testing (not required)
         Percolation a = new Percolation(4);
         a.open(0,0);
         a.open(1,0);
         a.open(0,1);
         a.open(3,0);
         System.out.print(a.percolates());
-    }
+    }*/
 
     /** each element */
 
